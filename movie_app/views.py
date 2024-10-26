@@ -1,13 +1,15 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from movie_app.models import Director, Movie, Review
 from movie_app.serializers import (DirectorSerializer, MovieSerializer,
                                    ReviewSerializer, DirectorValidateSerializer, MovieValidateSerializer,
                                    ReviewValidateSerializer)
+from users.permissions import IsSuperUser
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsSuperUser])
 def directors_list_create_api_view(request):
     if request.method == 'GET':
         directors = Director.objects.all()
