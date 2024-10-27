@@ -1,0 +1,17 @@
+version: '3'
+services:
+  web_api:
+    build:
+      context: .
+    command: sh -c 'python manage.py runserver localhost'
+    ports:
+      - '8000:8000'0
+
+  web_api:
+    hostname: web_host
+    environment:
+      POSTGRES_USER: tilek_k
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: tilek_db
+    ports:
+      - '5432:5432'

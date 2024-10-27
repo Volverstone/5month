@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'movie_app',
     'users',
     'rest_framework.authtoken'
+    'drf_yasq'
 
 ]
 
@@ -90,11 +91,12 @@ WSGI_APPLICATION = 'afisha.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('NAME_DB'),
-        'USER': os.environ.get('USER'),
-        'PASSWORD': os.environ.get('PASSWORD'),
-        'HOST': os.environ.get('HOST'),
-        'PORT': os.environ.get('PORT')
+        'NAME': BASE_DIR / 'db.sqlite3'
+        # 'NAME': os.environ.get('NAME_DB'),
+        # 'USER': os.environ.get('USER'),
+        # 'PASSWORD': os.environ.get('PASSWORD'),
+        # 'HOST': os.environ.get('HOST'),
+        # 'PORT': os.environ.get('PORT')
     }
 }
 
