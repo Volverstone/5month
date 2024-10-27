@@ -48,7 +48,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.autentication.TokenAuthentication',
         'rest_framework.autentication.BasicAuthentication',
-    ]
+    ],
+    'PAGE_SIZE': 3
 }
 
 MIDDLEWARE = [

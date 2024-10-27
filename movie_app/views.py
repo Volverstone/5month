@@ -7,6 +7,91 @@ from movie_app.serializers import (DirectorSerializer, MovieSerializer,
                                    ReviewSerializer, DirectorValidateSerializer, MovieValidateSerializer,
                                    ReviewValidateSerializer)
 from users.permissions import IsSuperUser
+from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
+
+class CustomPagination(PageNumberPagination):
+    def get_paginated_response(self, data):
+        return Response({
+            'total': self.page.paginator.count,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'results': data,
+        })
+
+class DirectorListAPIView(generics.ListCreateAPIView):
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
+    pagination_class = PageNumberPagination
+    
+class DetailDirectorAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
+    lookup_field = 'id'
+
+class MovieListAPIView(generics.ListCreateAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+from django.shortcuts import render
+from rest_framework import generics, status
+from rest_framework.response import Response
+
+from .models import Director, Movie, Review
+from .serializers import DirectorSerializer, MovieSerializer, ReviewSerializer, DirectortValiditySerializer, ReviewValiditySerializer
+
+
+class DirectorListAPIView(generics.ListCreateAPIView):
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
+
+    def post(self, request, *args, **kwargs):
+        validator = DirectortValiditySerializer(data=request.data)
+        if not validator.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data={'error': validator.errors})
+        name = validator.validated_data['name']
+        Director.objects.create(name=name)
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class DirectorDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
+    lookup_field = 'id'
+
+    def put(self, request, *args, **kwargs):
+        name_detail = self.get_object()
+        validator = DirectortValiditySerializer(data=request.data)
+        if not validator.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data={'error': validator.errors})
+        name_detail.name = validator.validated_data['name']
+        name_detail.save()
+        return Response(status=status.HTTP_200_OK)
+
+
+class MovieListAPIView(generics.ListCreateAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+
+
+class MovieDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    lookup_field = 'id'
+
+
+class ReviewListAPIView(generics.ListCreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+class ReviewDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    lookup_field = 'id'
+
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsSuperUser])
