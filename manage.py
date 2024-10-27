@@ -5,7 +5,9 @@ import sys
 
 
 def main():
-    """Run administrative tasks."""
+    """Run administrative ta
+    sks."""
+    dotenv.read_dotenv()
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'afisha.settings')
     try:
         from django.core.management import execute_from_command_line
